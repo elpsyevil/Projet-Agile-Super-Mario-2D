@@ -13,7 +13,7 @@ public abstract class Creature extends Sprite {
     /**
         Amount of time to go from STATE_DYING to STATE_DEAD.
     */
-    private static final int DIE_TIME = 1000;
+    protected static final int DIE_TIME = 1000;
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DYING = 1;
@@ -21,12 +21,13 @@ public abstract class Creature extends Sprite {
     
     protected boolean dead;
     
-    private Animation left;
-    private Animation right;
-    private Animation deadLeft;
-    private Animation deadRight;
-    private int state;
-    private long stateTime;
+    protected Animation left;
+    protected Animation right;
+    protected Animation deadLeft;
+    protected Animation deadRight;
+    
+    protected int state;
+    protected long stateTime;
 
     /**
         Creates a new Creature with the specified Animations.

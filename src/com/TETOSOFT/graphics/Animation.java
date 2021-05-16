@@ -51,7 +51,7 @@ public class Animation
             currFrameIndex = 0;
             return;
         }
-        
+
         if (frames.size() > 1) 
         {
             animTime += elapsedTime;
@@ -65,6 +65,7 @@ public class Animation
             while (animTime > getFrame(currFrameIndex).endTime) 
             {
                 currFrameIndex++;
+               
             }
         }
     }

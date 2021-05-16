@@ -253,9 +253,10 @@ public class MapLoader
 
         // load left-facing images
         images[0] = new Image[] {
-            loadImage("player-1.png"),
-            loadImage("player-2.png"),
-            loadImage("player-3.png"),         
+            loadImage("player1.png"),
+            loadImage("player4.png"),
+            loadImage("player3.png"),
+            loadImage("player2.png"),          
             loadImage("fly1.png"),
             loadImage("fly2.png"),
             loadImage("fly3.png"),
@@ -281,27 +282,27 @@ public class MapLoader
         Animation[] playerAnim = new Animation[4];
         Animation[] flyAnim = new Animation[4];
         Animation[] grubAnim = new Animation[4];
-        
         for (int i=0; i<4; i++) 
         {
-            playerAnim[i] = createPlayerAnim (images[i][0],images[i][1],images[i][2]);
-            flyAnim[i] = createFlyAnim (images[i][3], images[i][4], images[i][5]);
-            grubAnim[i] = createGrubAnim (images[i][6], images[i][7]);
+            playerAnim[i] = createPlayerAnim (images[i][0],images[i][1],images[i][2],images[i][3]);
+            flyAnim[i] = createFlyAnim (images[i][4], images[i][5], images[i][6]);
+            grubAnim[i] = createGrubAnim (images[i][7], images[i][8]);
         }
-
+        
+        
         // create creature sprites
         playerSprite = new Player (playerAnim[0], playerAnim[1],playerAnim[2], playerAnim[3]);
         flySprite = new Fly (flyAnim[0], flyAnim[1],flyAnim[2], flyAnim[3]);
         grubSprite = new Grub (grubAnim[0], grubAnim[1],grubAnim[2], grubAnim[3]);
     }
 
-
-    private Animation createPlayerAnim(Image player1,Image player2,Image player3)
+    private Animation createPlayerAnim(Image player1,Image player2,Image player3,Image player4)
     {
         Animation anim = new Animation();
-        anim.addFrame(player1, 250);
-        anim.addFrame(player2, 250);
-        anim.addFrame(player3, 250);
+        anim.addFrame(player1, 70);    
+        anim.addFrame(player2, 70);
+        anim.addFrame(player3, 70);
+        anim.addFrame(player4, 70);
      
         return anim;
     }
