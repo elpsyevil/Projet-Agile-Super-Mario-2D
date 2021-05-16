@@ -226,9 +226,13 @@ public class GameEngine extends GameCore
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
         
-        
+        if (player.getState() != Creature.STATE_DEAD) {
+            updateCreature(player, elapsedTime);
+            player.update(elapsedTime);
+        }
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
+
             map = mapLoader.reloadMap();
             return;
         }
@@ -236,9 +240,6 @@ public class GameEngine extends GameCore
         // get keyboard/mouse input
         checkInput(elapsedTime);
         
-        // update player
-        updateCreature(player, elapsedTime);
-        player.update(elapsedTime);
         
         // update other sprites
         Iterator i = map.getSprites();
@@ -250,10 +251,11 @@ public class GameEngine extends GameCore
                     i.remove();
                 } else {
                     updateCreature(creature, elapsedTime);
+                    // normal update
+                    sprite.update(elapsedTime);
                 }
             }
-            // normal update
-            sprite.update(elapsedTime);
+            
         }
     }
     

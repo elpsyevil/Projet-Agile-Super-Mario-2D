@@ -253,7 +253,9 @@ public class MapLoader
 
         // load left-facing images
         images[0] = new Image[] {
-            loadImage("player.png"),         
+            loadImage("player-1.png"),
+            loadImage("player-2.png"),
+            loadImage("player-3.png"),         
             loadImage("fly1.png"),
             loadImage("fly2.png"),
             loadImage("fly3.png"),
@@ -282,9 +284,9 @@ public class MapLoader
         
         for (int i=0; i<4; i++) 
         {
-            playerAnim[i] = createPlayerAnim (images[i][0]);
-            flyAnim[i] = createFlyAnim (images[i][1], images[i][1], images[i][3]);
-            grubAnim[i] = createGrubAnim (images[i][4], images[i][5]);
+            playerAnim[i] = createPlayerAnim (images[i][0],images[i][1],images[i][2]);
+            flyAnim[i] = createFlyAnim (images[i][3], images[i][4], images[i][5]);
+            grubAnim[i] = createGrubAnim (images[i][6], images[i][7]);
         }
 
         // create creature sprites
@@ -294,10 +296,12 @@ public class MapLoader
     }
 
 
-    private Animation createPlayerAnim(Image player)
+    private Animation createPlayerAnim(Image player1,Image player2,Image player3)
     {
         Animation anim = new Animation();
-        anim.addFrame(player, 250);
+        anim.addFrame(player1, 250);
+        anim.addFrame(player2, 250);
+        anim.addFrame(player3, 250);
      
         return anim;
     }

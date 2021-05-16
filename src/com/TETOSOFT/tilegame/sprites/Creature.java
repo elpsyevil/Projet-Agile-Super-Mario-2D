@@ -18,7 +18,9 @@ public abstract class Creature extends Sprite {
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
-
+    
+    private boolean dead;
+    
     private Animation left;
     private Animation right;
     private Animation deadLeft;
@@ -38,6 +40,7 @@ public abstract class Creature extends Sprite {
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         state = STATE_NORMAL;
+        dead = false;
     }
 
 
@@ -144,6 +147,9 @@ public abstract class Creature extends Sprite {
     public void update(long elapsedTime) {
         // select the correct Animation
         Animation newAnim = anim;
+        if (state == STATE_DEAD || state == STATE_DYING) {dead = true;}
+        else {dead = false;}
+
         if (getVelocityX() < 0) {
             newAnim = left;
         }
@@ -162,8 +168,10 @@ public abstract class Creature extends Sprite {
             anim = newAnim;
             anim.start();
         }
+        
+
         else {
-            anim.update(elapsedTime);
+            anim.update(elapsedTime, dead);
         }
 
         // update to "dead" state
