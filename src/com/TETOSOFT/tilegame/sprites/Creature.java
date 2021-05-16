@@ -19,7 +19,7 @@ public abstract class Creature extends Sprite {
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
     
-    private boolean dead;
+    protected boolean dead;
     
     private Animation left;
     private Animation right;
@@ -40,9 +40,12 @@ public abstract class Creature extends Sprite {
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         state = STATE_NORMAL;
-        dead = false;
+        dead = true;
     }
 
+    public void setDead(boolean dead){
+        this.dead = dead;
+    }
 
     public Object clone() {
         // use reflection to create the correct subclass
@@ -147,15 +150,17 @@ public abstract class Creature extends Sprite {
     public void update(long elapsedTime) {
         // select the correct Animation
         Animation newAnim = anim;
-        if (state == STATE_DEAD || state == STATE_DYING) {dead = true;}
-        else {dead = false;}
+        if (state == STATE_DEAD || state == STATE_DYING) {this.dead = true;}
 
         if (getVelocityX() < 0) {
             newAnim = left;
+            this.dead = false;
         }
         else if (getVelocityX() > 0) {
             newAnim = right;
+            this.dead = false;
         }
+        else this.dead = true;
         if (state == STATE_DYING && newAnim == left) {
             newAnim = deadLeft;
         }
@@ -171,7 +176,7 @@ public abstract class Creature extends Sprite {
         
 
         else {
-            anim.update(elapsedTime, dead);
+            anim.update(elapsedTime, this.dead);
         }
 
         // update to "dead" state

@@ -88,7 +88,7 @@ public class GameEngine extends GameCore
         
         Player player = (Player)map.getPlayer();
         if (player.isAlive()) 
-        {
+        {   
             float velocityX = 0;
             if (moveLeft.isPressed()) 
             {

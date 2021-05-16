@@ -47,7 +47,11 @@ public class Animation
 
     public synchronized void update(long elapsedTime, boolean dead) 
     {
-        if (dead) return;
+        if (dead) {
+            currFrameIndex = 0;
+            return;
+        }
+        
         if (frames.size() > 1) 
         {
             animTime += elapsedTime;
