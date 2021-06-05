@@ -21,6 +21,7 @@ public class GameEngine extends GameCore
     }
     
     public static final float GRAVITY = 0.002f;
+    public static int animationSpeed = 70;
     
     private Point pointCache = new Point();
     private TileMap map;
@@ -32,6 +33,7 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction run;
     private int collectedStars=0;
     private int numLives=6;
     private String status = "";
@@ -48,7 +50,7 @@ public class GameEngine extends GameCore
         
         // load resources
         drawer = new TileMapDrawer();
-        drawer.setBackground(mapLoader.loadImage("background.jpg"));
+        drawer.setBackground(mapLoader.loadImage("background.png"));
         
         // load first map
         map = mapLoader.loadNextMap();
@@ -69,6 +71,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        run = new GameAction("run");
         
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
@@ -77,6 +80,8 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(run, KeyEvent.VK_CONTROL);
+    
     }
     
     
@@ -89,17 +94,20 @@ public class GameEngine extends GameCore
         
         Player player = (Player)map.getPlayer();
         if (player.isAlive()) 
-        {
+        {   
             float velocityX = 0;
+            animationSpeed = 70;
             if (moveLeft.isPressed()) 
-            {
-                velocityX-=player.getMaxSpeed();
+            {   if (run.isPressed()){animationSpeed=150;  velocityX-= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70;velocityX-=player.getMaxSpeed();}
             }
             if (moveRight.isPressed()) {
-                velocityX+=player.getMaxSpeed();
+                if (run.isPressed()) {animationSpeed=150; velocityX+= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70; velocityX+=player.getMaxSpeed();}
             }
             if (jump.isPressed()) {
                 player.jump(false);
+                animationSpeed = 70;
             }
             player.setVelocityX(velocityX);
         }
@@ -231,6 +239,7 @@ public class GameEngine extends GameCore
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
         
+
         if(MapLoader.mapCount == 4 && MapLoader.finalPoint == 1) {
         	try {
 				Thread.sleep(5000);
@@ -244,8 +253,10 @@ public class GameEngine extends GameCore
         }
         
         
+
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
+
             map = mapLoader.reloadMap();
             if(numLives == 0 || numLives == 6 ) {
                 try {
@@ -262,9 +273,6 @@ public class GameEngine extends GameCore
         // get keyboard/mouse input
         checkInput(elapsedTime);
         
-        // update player
-        updateCreature(player, elapsedTime);
-        player.update(elapsedTime);
         
         // update other sprites
         Iterator i = map.getSprites();
@@ -276,10 +284,11 @@ public class GameEngine extends GameCore
                     i.remove();
                 } else {
                     updateCreature(creature, elapsedTime);
+                    // normal update
+                    sprite.update(elapsedTime);
                 }
             }
-            // normal update
-            sprite.update(elapsedTime);
+            
         }
     }
     

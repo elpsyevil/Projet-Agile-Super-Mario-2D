@@ -97,7 +97,7 @@ public class TileMapDrawer
         if (background == null ||
             screenHeight > background.getHeight(null))
         {
-            g.setColor(Color.black);
+            g.setColor(Color.red);
             g.fillRect(0, 0, screenWidth, screenHeight);
         }
 

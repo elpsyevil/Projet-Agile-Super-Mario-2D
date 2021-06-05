@@ -24,7 +24,7 @@ public class Sprite {
     {
         x += dx * elapsedTime;
         y += dy * elapsedTime;
-        anim.update(elapsedTime);
+        anim.update(elapsedTime,true);
     }
 
     

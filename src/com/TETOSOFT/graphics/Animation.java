@@ -11,6 +11,15 @@ public class Animation
     private long animTime;
     private long totalDuration;
 
+    public long getTotalDuration() {
+        return this.totalDuration;
+    }
+
+    public void setTotalDuration(long totalDuration) {
+        this.totalDuration = totalDuration;
+    }
+     
+
 
     public Animation() 
     {
@@ -39,15 +48,24 @@ public class Animation
     }
 
 
+    public synchronized void addFrame(Image image)
+    {
+        frames.add(new AnimFrame(image, totalDuration));
+    }
+
     public synchronized void start() 
     {
         animTime = 0;
         currFrameIndex = 0;
     }
 
-
-    public synchronized void update(long elapsedTime) 
+    public synchronized void update(long elapsedTime, boolean dead) 
     {
+        if (dead) {
+            currFrameIndex = 0;
+            return;
+        }
+
         if (frames.size() > 1) 
         {
             animTime += elapsedTime;
@@ -55,12 +73,13 @@ public class Animation
             if (animTime >= totalDuration) 
             {
                 animTime = animTime % totalDuration;
-                currFrameIndex = 0;
+                currFrameIndex = 1;
             }
 
             while (animTime > getFrame(currFrameIndex).endTime) 
             {
                 currFrameIndex++;
+               
             }
         }
     }
