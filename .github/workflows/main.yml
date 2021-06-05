@@ -57,8 +57,10 @@ jobs:
       - name: Compile to jar
 
         run: |
-
-          javac -d ./TEST_BUILD ./src/com/TETOSOFT/**/*.java
+        
+          echo "Starting compilation..."
+          cd src/com/TETOSOFT
+          javac -d ./TEST_BUILD ./**/*.java
 
           jar cvf TEST_MARIO.jar *
           
