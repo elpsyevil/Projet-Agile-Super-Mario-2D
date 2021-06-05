@@ -21,6 +21,7 @@ public class GameEngine extends GameCore
     }
     
     public static final float GRAVITY = 0.002f;
+    public static int animationSpeed = 70;
     
     private Point pointCache = new Point();
     private TileMap map;
@@ -32,6 +33,7 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction run;
     private int collectedStars=0;
     private int numLives=6;
    
@@ -68,6 +70,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        run = new GameAction("run");
         
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
@@ -76,6 +79,8 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(run, KeyEvent.VK_CONTROL);
+    
     }
     
     
@@ -90,15 +95,18 @@ public class GameEngine extends GameCore
         if (player.isAlive()) 
         {   
             float velocityX = 0;
+            animationSpeed = 70;
             if (moveLeft.isPressed()) 
-            {
-                velocityX-=player.getMaxSpeed();
+            {   if (run.isPressed()){animationSpeed=150;  velocityX-= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70;velocityX-=player.getMaxSpeed();}
             }
             if (moveRight.isPressed()) {
-                velocityX+=player.getMaxSpeed();
+                if (run.isPressed()) {animationSpeed=150; velocityX+= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70; velocityX+=player.getMaxSpeed();}
             }
             if (jump.isPressed()) {
                 player.jump(false);
+                animationSpeed = 70;
             }
             player.setVelocityX(velocityX);
         }
