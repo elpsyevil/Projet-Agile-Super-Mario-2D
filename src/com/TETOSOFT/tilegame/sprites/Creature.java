@@ -13,18 +13,21 @@ public abstract class Creature extends Sprite {
     /**
         Amount of time to go from STATE_DYING to STATE_DEAD.
     */
-    private static final int DIE_TIME = 1000;
+    protected static final int DIE_TIME = 1000;
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
-
-    private Animation left;
-    private Animation right;
-    private Animation deadLeft;
-    private Animation deadRight;
-    private int state;
-    private long stateTime;
+    
+    protected boolean dead;
+    
+    protected Animation left;
+    protected Animation right;
+    protected Animation deadLeft;
+    protected Animation deadRight;
+    
+    protected int state;
+    protected long stateTime;
 
     /**
         Creates a new Creature with the specified Animations.
@@ -38,8 +41,12 @@ public abstract class Creature extends Sprite {
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         state = STATE_NORMAL;
+        dead = true;
     }
 
+    public void setDead(boolean dead){
+        this.dead = dead;
+    }
 
     public Object clone() {
         // use reflection to create the correct subclass
@@ -144,12 +151,17 @@ public abstract class Creature extends Sprite {
     public void update(long elapsedTime) {
         // select the correct Animation
         Animation newAnim = anim;
+        if (state == STATE_DEAD || state == STATE_DYING) {this.dead = true;}
+
         if (getVelocityX() < 0) {
             newAnim = left;
+            this.dead = false;
         }
         else if (getVelocityX() > 0) {
             newAnim = right;
+            this.dead = false;
         }
+        else this.dead = true;
         if (state == STATE_DYING && newAnim == left) {
             newAnim = deadLeft;
         }
@@ -162,8 +174,10 @@ public abstract class Creature extends Sprite {
             anim = newAnim;
             anim.start();
         }
+        
+
         else {
-            anim.update(elapsedTime);
+            anim.update(elapsedTime, this.dead);
         }
 
         // update to "dead" state
