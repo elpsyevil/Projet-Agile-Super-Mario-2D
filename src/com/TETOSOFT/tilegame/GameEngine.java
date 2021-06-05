@@ -231,6 +231,18 @@ public class GameEngine extends GameCore
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
         
+        if(MapLoader.mapCount == 4 && MapLoader.finalPoint == 1) {
+        	try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            status = "YOU WON!";
+            MapLoader.mapCount = 0;
+            MapLoader.finalPoint = 0;
+        }
+        
         
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
