@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
+import com.TETOSOFT.menu.Fenetre;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
 
@@ -17,7 +18,7 @@ public class GameEngine extends GameCore
     
     public static void main(String[] args) 
     {
-        new GameEngine().run();
+        Fenetre fen = new Fenetre();
     }
     
     public static final float GRAVITY = 0.002f;
