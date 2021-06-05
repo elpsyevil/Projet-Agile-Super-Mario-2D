@@ -34,6 +34,7 @@ public class GameEngine extends GameCore
     private GameAction exit;
     private int collectedStars=0;
     private int numLives=6;
+    private String status = "";
    
     public void init()
     {
@@ -117,6 +118,10 @@ public class GameEngine extends GameCore
         g.drawString("Lives: "+(numLives),500.0f,20.0f );
         g.setColor(Color.WHITE);
         g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
+        
+        g.setColor(Color.RED);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 40)); 
+        g.drawString(status, 350.0f, 100.0f);
         
     }
     
@@ -226,10 +231,31 @@ public class GameEngine extends GameCore
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
         
+        if(MapLoader.mapCount == 4 && MapLoader.finalPoint == 1) {
+        	try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            status = "YOU WON!";
+            MapLoader.mapCount = 0;
+            MapLoader.finalPoint = 0;
+        }
+        
         
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
             map = mapLoader.reloadMap();
+            if(numLives == 0 || numLives == 6 ) {
+                try {
+    				Thread.sleep(5000);
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+                status = "";
+            }
             return;
         }
         
@@ -349,12 +375,10 @@ public class GameEngine extends GameCore
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                    stop();
+                    //stop();
+                    status = "YOU LOST!";
+                    collectedStars=0;
+                    numLives=6;
                 }
             }
         }
