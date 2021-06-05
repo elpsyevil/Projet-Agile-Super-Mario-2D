@@ -28,7 +28,8 @@ public class MapLoader
     private Sprite goalSprite;
     private Sprite grubSprite;
     private Sprite flySprite;
-
+    public static int mapCount=0;
+    public static int finalPoint=0;
     /**
         Creates a new ResourceManager with the specified
         GraphicsConfiguration.
@@ -95,6 +96,7 @@ public class MapLoader
         while (map == null) 
         {
             currentMap++;
+            mapCount = currentMap;
             try {
                 map = loadMap(
                     "maps/map" + currentMap + ".txt");
@@ -125,6 +127,10 @@ public class MapLoader
             ex.printStackTrace();
             return null;
         }
+    }
+    
+    public int getCurrent() {
+    	return currentMap;
     }
 
 
@@ -176,6 +182,7 @@ public class MapLoader
                 }
                 else if (ch == '*') {
                     addSprite(newMap, goalSprite, x, y);
+                    finalPoint = 1;
                 }
                 else if (ch == '1') {
                     addSprite(newMap, grubSprite, x, y);
