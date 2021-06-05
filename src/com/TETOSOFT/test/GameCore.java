@@ -106,7 +106,6 @@ public abstract class GameCore {
     public void gameLoop() {
         long startTime = System.currentTimeMillis();
         long currTime = startTime;
-        
 
         while (isRunning) {
             long elapsedTime =

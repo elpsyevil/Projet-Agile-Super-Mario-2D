@@ -8,8 +8,6 @@ import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * GameManager manages all parts of the game.
@@ -23,12 +21,6 @@ public class GameEngine extends GameCore
     }
     
     public static final float GRAVITY = 0.002f;
-    private final Sounds deathSound=new Sounds("Sounds/death.wav");
-    private final Sounds coinSound=new Sounds("Sounds/coin.wav");
-    private final Sounds jumpSound=new Sounds("Sounds/jump.wav");
-    private final Sounds killSound=new Sounds("Sounds/kill.wav");
-    private final Sounds  music=new Sounds("Sounds/music.wav");
-
     
     private Point pointCache = new Point();
     private TileMap map;
@@ -59,10 +51,6 @@ public class GameEngine extends GameCore
         
         // load first map
         map = mapLoader.loadNextMap();
-        
-        //play music
-        music.playSound();
-        music.loop();
     }
     
     
@@ -111,7 +99,6 @@ public class GameEngine extends GameCore
             }
             if (jump.isPressed()) {
                 player.jump(false);
-                jumpSound.playSound();
             }
             player.setVelocityX(velocityX);
         }
@@ -242,17 +229,8 @@ public class GameEngine extends GameCore
         
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
-           // try {
-                music.stopSound();
-                deathSound.playSound();
-                map = mapLoader.reloadMap();
-                
-                //Thread.sleep(3000);
-                music.playSound();
-                return;
-                /*} catch (InterruptedException ex) {
-                Logger.getLogger(GameEngine.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+            map = mapLoader.reloadMap();
+            return;
         }
         
         // get keyboard/mouse input
@@ -363,7 +341,6 @@ public class GameEngine extends GameCore
             Creature badguy = (Creature)collisionSprite;
             if (canKill) {
                 // kill the badguy and make player bounce
-                killSound.playSound();
                 badguy.setState(Creature.STATE_DYING);
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
@@ -390,7 +367,6 @@ public class GameEngine extends GameCore
      */
     public void acquirePowerUp(PowerUp powerUp) {
         // remove it from the map
-        coinSound.playSound();
         map.removeSprite(powerUp);
         
         if (powerUp instanceof PowerUp.Star) {
