@@ -14,7 +14,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
+import java.lang.Math;
 /**
  *
  * @author ThinkPad
@@ -39,10 +39,22 @@ public class Sounds {
     }
 
     public  void playSound(){
-        clip.setFramePosition(0);
-        clip.start();
 
+            if (clip.isRunning())
+               clip.stop();   // Stop the player if it is still running
+            clip.setFramePosition(0); // rewind to the beginning
+            clip.start();     // Start playing
+         
     }
+
+    public  void playSound(Double b){
+
+        if (clip.isRunning())
+           clip.stop();   // Stop the player if it is still running
+        clip.setFramePosition((int)Math.round(clip.getFrameLength()*b)); // rewind to the beginning
+        clip.start();     // Start playing
+     
+}
 
     public  void loop(){
 
@@ -50,10 +62,13 @@ public class Sounds {
 
     }
 
-    public  void stopSound(){
+    public boolean isRunning(){
+        return clip.isRunning();
+    }
 
+    public  void stopSound(){
+        clip.setFramePosition(0);
         clip.stop();
-        //clip.close();
 
     }
 }

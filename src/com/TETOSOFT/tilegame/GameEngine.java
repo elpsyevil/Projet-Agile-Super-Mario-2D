@@ -119,9 +119,9 @@ public class GameEngine extends GameCore
                 else {animationSpeed=70; velocityX+=player.getMaxSpeed();}
             }
             if (jump.isPressed()) {
+                jumpSound.playSound(0.2);
                 player.jump(false);
                 animationSpeed = 70;
-                jumpSound.playSound();
             }
             player.setVelocityX(velocityX);
         }
@@ -140,10 +140,12 @@ public class GameEngine extends GameCore
         g.drawString("Lives: "+(numLives),500.0f,50.0f );
         g.setColor(Color.WHITE);
         g.drawString("Home: "+mapLoader.currentMap,700.0f,50.0f);
-        
-        g.setColor(Color.RED);
+
+        if(status == "YOU WON!") g.setColor(Color.GREEN);
+        else g.setColor(Color.RED);
+
         g.setFont(new Font("TimesRoman", Font.PLAIN, 40)); 
-        g.drawString(status, 350.0f, 100.0f);
+        g.drawString(status, 300.0f, 100.0f);
         
     }
     
@@ -269,15 +271,16 @@ public class GameEngine extends GameCore
 
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
-                music.stopSound();
-                deathSound.playSound();
-                map = mapLoader.reloadMap();
+                
+            map = mapLoader.reloadMap();
+            music.playSound();
+
 
                 //Thread.sleep(3000);
-                music.playSound();
+                
             if(numLives == 0 || numLives == 6 ) {
                 try {
-    				Thread.sleep(5000);
+    				Thread.sleep(1000);
     			} catch (InterruptedException e) {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
@@ -400,6 +403,8 @@ public class GameEngine extends GameCore
                 player.jump(true);
             } else {
                 // player dies!
+                music.stopSound();
+                deathSound.playSound(0.05);
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
@@ -419,7 +424,7 @@ public class GameEngine extends GameCore
      */
     public void acquirePowerUp(PowerUp powerUp) {
         // remove it from the map
-        coinSound.playSound();
+        coinSound.playSound(0.05);
         map.removeSprite(powerUp);
         
         if (powerUp instanceof PowerUp.Star) {
