@@ -23,6 +23,7 @@ public class GameEngine extends GameCore
         Fenetre fen = new Fenetre();
     }
     
+    
     public static final float GRAVITY = 0.002f;
     private final Sounds deathSound=new Sounds("Sounds/death.wav");
     private final Sounds coinSound=new Sounds("Sounds/coin.wav");

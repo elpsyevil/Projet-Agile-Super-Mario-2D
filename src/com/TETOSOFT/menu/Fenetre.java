@@ -47,7 +47,15 @@ public class Fenetre extends JFrame{
 		
 		boutonPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				new GameEngine().run();
+				
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						new GameEngine().run();      
+					}
+				
+				   });
+				t.start();
 			}
 		});
 
