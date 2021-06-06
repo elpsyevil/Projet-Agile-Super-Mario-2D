@@ -28,7 +28,7 @@ public class MapLoader
     private Sprite goalSprite;
     private Sprite grubSprite;
     private Sprite flySprite;
-    public static int mapCount=0;
+    public static int mapCount=1;
     public static int finalPoint=0;
     /**
         Creates a new ResourceManager with the specified
@@ -96,7 +96,7 @@ public class MapLoader
         while (map == null) 
         {
             currentMap++;
-            mapCount = currentMap;
+            // mapCount = currentMap;
             try {
                 map = loadMap(
                     "maps/map" + currentMap + ".txt");
@@ -108,6 +108,7 @@ public class MapLoader
                     // no maps to load!
                     return null;
                 }
+                  mapCount=0;
                   currentMap = 0;
                 map = null;
             }

@@ -238,17 +238,16 @@ public class GameEngine extends GameCore
      */
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
-        
 
-        if(MapLoader.mapCount == 4 && MapLoader.finalPoint == 1) {
-        	try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        if(MapLoader.mapCount == 0) {
+        	// try {
+			// 	Thread.sleep(1000);
+			// } catch (InterruptedException e) {
+			// 	// TODO Auto-generated catch block
+			// 	e.printStackTrace();
+			// }
             status = "YOU WON!";
-            MapLoader.mapCount = 0;
+            MapLoader.mapCount = 1;
             MapLoader.finalPoint = 0;
         }
         
@@ -269,7 +268,8 @@ public class GameEngine extends GameCore
             }
             return;
         }
-        
+        updateCreature(player, elapsedTime);
+        player.update(elapsedTime);
         // get keyboard/mouse input
         checkInput(elapsedTime);
         
