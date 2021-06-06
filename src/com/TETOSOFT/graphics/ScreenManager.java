@@ -6,15 +6,29 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
+import com.TETOSOFT.test.GameCore;
+
 public class ScreenManager 
 {
     private GraphicsDevice device;
+    private JFrame frame;
 
    
     public ScreenManager() 
     {
         GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         device = environment.getDefaultScreenDevice();
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setUndecorated(false);
+        frame.setIgnoreRepaint(true);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        // frame.pack();
+        frame.setVisible(true);
+        
+
     }
 
 
@@ -75,15 +89,11 @@ public class ScreenManager
     }
 
 
-    public void setFullScreen(DisplayMode displayMode) 
+    public JFrame setFullScreen(DisplayMode displayMode) 
     {
-        final JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setUndecorated(true);
-        frame.setIgnoreRepaint(true);
-        frame.setResizable(false);
+        
 
-        device.setFullScreenWindow(frame);
+        device.setFullScreenWindow(null);
 
         if (displayMode != null && device.isDisplayChangeSupported())
         {
@@ -112,14 +122,14 @@ public class ScreenManager
         {
             // ignore
         }
-
-
+        device.setFullScreenWindow(null);
+        return frame;
     }
 
     
     public Graphics2D getGraphics() 
     {
-        Window window = device.getFullScreenWindow();
+        Window window = this.frame;
         if (window != null) 
         {
             BufferStrategy strategy = window.getBufferStrategy();
@@ -134,7 +144,7 @@ public class ScreenManager
    
     public void update() 
     {
-        Window window = device.getFullScreenWindow();
+        Window window =  this.frame;
         if (window != null) 
         {
             BufferStrategy strategy = window.getBufferStrategy();
@@ -150,14 +160,16 @@ public class ScreenManager
 
 
     public JFrame getFullScreenWindow() {
-        return (JFrame)device.getFullScreenWindow();
+        // return (JFrame)device.getFullScreenWindow();
+        // return setFullScreen(findFirstCompatibleMode(GameCore.POSSIBLE_MODES));
+        return this.frame;
     }
 
 
    
     public int getWidth() 
     {
-        Window window = device.getFullScreenWindow();
+        Window window = this.frame;
         if (window != null) 
         {
             return window.getWidth();
@@ -172,7 +184,7 @@ public class ScreenManager
     
     public int getHeight() 
     {
-        Window window = device.getFullScreenWindow();
+        Window window =  this.frame;
         if (window != null) 
         {
             return window.getHeight();
@@ -187,7 +199,7 @@ public class ScreenManager
     
     public void restoreScreen() 
     {
-        Window window = device.getFullScreenWindow();
+        Window window = this.frame;
         if (window != null) 
         {
             window.dispose();
@@ -199,7 +211,7 @@ public class ScreenManager
     public BufferedImage createCompatibleImage(int w, int h,
         int transparancy)
     {
-        Window window = device.getFullScreenWindow();
+        Window window =  this.frame;
         if (window != null) {
             GraphicsConfiguration gc =
                 window.getGraphicsConfiguration();
