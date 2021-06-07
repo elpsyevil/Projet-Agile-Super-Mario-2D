@@ -51,7 +51,7 @@ jobs:
         
           echo "Starting compilation..."
           cd src/
-          mkdir TEST_BUILD
+          mkdir ../TEST_BUILD
           javac -d ../TEST_BUILD ./com/TETOSOFT/graphics/*.java ./com/TETOSOFT/input/*.java ./com/TETOSOFT/test/*.java ./com/TETOSOFT/tilegame/*.java
           cd ../TEST_BUILD/
           jar cvf TEST_MARIO.jar *
