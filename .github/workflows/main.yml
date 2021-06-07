@@ -50,8 +50,8 @@ jobs:
         run: |
         
           echo "Starting compilation..."
-          cd src/com/TETOSOFT
-          javac -d ./TEST_BUILD ./**/*.java
+          cd src/
+          javac -d ../TEST_BUILD ./com/TETOSOFT/**/*.java
 
           jar cvf TEST_MARIO.jar *
           
