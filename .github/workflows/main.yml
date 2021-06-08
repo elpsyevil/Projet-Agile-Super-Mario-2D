@@ -14,7 +14,7 @@ on:
 
   push:
 
-    branches: [ staging ]
+    branches: [ staging, main ]
 
   pull_request:
 
