@@ -1,5 +1,7 @@
 package com.TETOSOFT.tilegame;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Iterator;
@@ -9,8 +11,14 @@ import com.TETOSOFT.input.*;
 import com.TETOSOFT.menu.Fenetre;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
+
+import org.junit.Test;
+
+import jdk.jfr.Timestamp;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * GameManager manages all parts of the game.
@@ -125,6 +133,7 @@ public class GameEngine extends GameCore
             }
             player.setVelocityX(velocityX);
         }
+        
         
     }
     
@@ -446,6 +455,7 @@ public class GameEngine extends GameCore
             
         }
     }
+
     
       
 }

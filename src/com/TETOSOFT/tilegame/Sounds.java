@@ -66,6 +66,10 @@ public class Sounds {
         return clip.isRunning();
     }
 
+    public boolean isActive(){
+        return clip.isActive();
+    }
+
     public  void stopSound(){
         clip.setFramePosition(0);
         clip.stop();
