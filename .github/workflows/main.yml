@@ -55,12 +55,15 @@ jobs:
           javac -d ../TEST_BUILD ./com/TETOSOFT/graphics/*.java ./com/TETOSOFT/input/*.java ./com/TETOSOFT/test/*.java ./com/TETOSOFT/tilegame/*.java
           cd ../TEST_BUILD/
           jar cvf TEST_MARIO.jar *
-          cd ..
+          cd ../..
           
 
       
-
+      - name : Run Tests
+        run: |
+          echo "Running Test..."
+          java -jar ./lib/junit-platform-console-standalone-1.8.0-M1.jar --class-path="./src/" -d ./src/ -n .*Test
       - name: Clean up
 
-        run: rm -r ./TEST_BUILD/*
+        run: rm -r ./src/TEST_BUILD/*
 
