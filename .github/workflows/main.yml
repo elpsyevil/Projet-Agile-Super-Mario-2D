@@ -65,5 +65,5 @@ jobs:
           java -jar ./lib/junit-platform-console-standalone-1.8.0-M1.jar --class-path="." -d ./test
       - name: Clean up
 
-        run: rm -r ./src/TEST_BUILD/*
+        run: rm -r ./TEST_BUILD/*
 
