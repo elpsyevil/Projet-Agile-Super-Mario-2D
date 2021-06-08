@@ -32,16 +32,7 @@ jobs:
 
     # The type of runner that the job will run on
 
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-
-      matrix:
-
-        os: [ubuntu-latest, windows-latest]
-
-
-
+    runs-on: windows-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
 
     steps:
@@ -59,15 +50,18 @@ jobs:
         run: |
         
           echo "Starting compilation..."
-          cd src/com/TETOSOFT
-          javac -d ./TEST_BUILD ./**/*.java
-
+          cd src/
+          mkdir ../TEST_BUILD
+          javac -d ../TEST_BUILD ./com/TETOSOFT/graphics/*.java ./com/TETOSOFT/input/*.java ./com/TETOSOFT/test/*.java ./com/TETOSOFT/tilegame/*.java
+          cd ../TEST_BUILD/
           jar cvf TEST_MARIO.jar *
+          cd ..
           
-
       
-
+      - name : Run Tests
+        run: |
+          echo "Running Test..."
+          java -jar ./lib/junit-platform-console-standalone-1.8.0-M1.jar --class-path="." -d ./test
       - name: Clean up
 
         run: rm -r ./TEST_BUILD/*
-
