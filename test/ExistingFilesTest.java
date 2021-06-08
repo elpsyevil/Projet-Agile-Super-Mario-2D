@@ -1,4 +1,4 @@
-package com.TETOSOFT.tilegame;
+
 
 import org.junit.Test;
 

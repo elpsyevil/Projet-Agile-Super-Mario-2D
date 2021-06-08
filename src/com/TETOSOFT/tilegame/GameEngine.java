@@ -1,6 +1,5 @@
 package com.TETOSOFT.tilegame;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,7 +11,7 @@ import com.TETOSOFT.menu.Fenetre;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
 
-import org.junit.Test;
+
 
 import jdk.jfr.Timestamp;
 

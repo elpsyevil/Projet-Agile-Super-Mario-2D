@@ -18,7 +18,7 @@ public class playerTest  {
     @Test
     public void testPosition() {
 
-        float pos = (float)123;
+        float pos = (float)1;
         p.setY(pos);
         assertEquals(pos,p.getY());
         p.setX(pos);
@@ -28,7 +28,7 @@ public class playerTest  {
 
     @Test
     public void testVelocity(){
-        float V = (float)123;
+        float V = (float)1;
         p.setVelocityX(V);
         assertEquals(V,p.getVelocityX());
         p.setVelocityY(V);
