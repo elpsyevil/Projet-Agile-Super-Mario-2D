@@ -1,13 +1,24 @@
 package com.TETOSOFT.tilegame;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 import com.TETOSOFT.graphics.*;
 import com.TETOSOFT.input.*;
+import com.TETOSOFT.menu.Fenetre;
 import com.TETOSOFT.test.GameCore;
 import com.TETOSOFT.tilegame.sprites.*;
+
+import org.junit.Test;
+
+import jdk.jfr.Timestamp;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * GameManager manages all parts of the game.
@@ -17,10 +28,17 @@ public class GameEngine extends GameCore
     
     public static void main(String[] args) 
     {
-        new GameEngine().run();
+        Fenetre fen = new Fenetre();
     }
     
+    
     public static final float GRAVITY = 0.002f;
+    private final Sounds deathSound=new Sounds("Sounds/death.wav");
+    private final Sounds coinSound=new Sounds("Sounds/coin.wav");
+    private final Sounds jumpSound=new Sounds("Sounds/jump.wav");
+    private final Sounds killSound=new Sounds("Sounds/kill.wav");
+    private final Sounds  music=new Sounds("Sounds/music.wav");
+    public static int animationSpeed = 70;
     
     private Point pointCache = new Point();
     private TileMap map;
@@ -32,6 +50,7 @@ public class GameEngine extends GameCore
     private GameAction moveRight;
     private GameAction jump;
     private GameAction exit;
+    private GameAction run;
     private int collectedStars=0;
     private int numLives=6;
     private String status = "";
@@ -48,10 +67,14 @@ public class GameEngine extends GameCore
         
         // load resources
         drawer = new TileMapDrawer();
-        drawer.setBackground(mapLoader.loadImage("background.jpg"));
+        drawer.setBackground(mapLoader.loadImage("background.png"));
         
         // load first map
         map = mapLoader.loadNextMap();
+
+        //play music
+        music.playSound();
+        music.loop();
     }
     
     
@@ -69,6 +92,7 @@ public class GameEngine extends GameCore
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
         exit = new GameAction("exit",GameAction.DETECT_INITAL_PRESS_ONLY);
+        run = new GameAction("run");
         
         inputManager = new InputManager(screen.getFullScreenWindow());
         inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
@@ -77,6 +101,8 @@ public class GameEngine extends GameCore
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(run, KeyEvent.VK_CONTROL);
+    
     }
     
     
@@ -89,20 +115,25 @@ public class GameEngine extends GameCore
         
         Player player = (Player)map.getPlayer();
         if (player.isAlive()) 
-        {
+        {   
             float velocityX = 0;
+            animationSpeed = 70;
             if (moveLeft.isPressed()) 
-            {
-                velocityX-=player.getMaxSpeed();
+            {   if (run.isPressed()){animationSpeed=150;  velocityX-= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70;velocityX-=player.getMaxSpeed();}
             }
             if (moveRight.isPressed()) {
-                velocityX+=player.getMaxSpeed();
+                if (run.isPressed()) {animationSpeed=150; velocityX+= 1.5 * player.getMaxSpeed();}
+                else {animationSpeed=70; velocityX+=player.getMaxSpeed();}
             }
             if (jump.isPressed()) {
+                jumpSound.playSound(0.2);
                 player.jump(false);
+                animationSpeed = 70;
             }
             player.setVelocityX(velocityX);
         }
+        
         
     }
     
@@ -111,17 +142,19 @@ public class GameEngine extends GameCore
         
         drawer.draw(g, map, screen.getWidth(), screen.getHeight());
         g.setColor(Color.WHITE);
-        g.drawString("Press ESC for EXIT.",10.0f,20.0f);
+        g.drawString("Press ESC for EXIT.",10.0f,50.0f);
         g.setColor(Color.GREEN);
-        g.drawString("Coins: "+collectedStars,300.0f,20.0f);
+        g.drawString("Coins: "+collectedStars,300.0f,50.0f);
         g.setColor(Color.YELLOW);
-        g.drawString("Lives: "+(numLives),500.0f,20.0f );
+        g.drawString("Lives: "+(numLives),500.0f,50.0f );
         g.setColor(Color.WHITE);
-        g.drawString("Home: "+mapLoader.currentMap,700.0f,20.0f);
-        
-        g.setColor(Color.RED);
+        g.drawString("Home: "+mapLoader.currentMap,700.0f,50.0f);
+
+        if(status == "YOU WON!") g.setColor(Color.GREEN);
+        else g.setColor(Color.RED);
+
         g.setFont(new Font("TimesRoman", Font.PLAIN, 40)); 
-        g.drawString(status, 350.0f, 100.0f);
+        g.drawString(status, 300.0f, 100.0f);
         
     }
     
@@ -230,26 +263,33 @@ public class GameEngine extends GameCore
      */
     public void update(long elapsedTime) {
         Creature player = (Creature)map.getPlayer();
-        
-        if(MapLoader.mapCount == 4 && MapLoader.finalPoint == 1) {
-        	try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+        if(MapLoader.mapCount == 0) {
+        	// try {
+			// 	Thread.sleep(1000);
+			// } catch (InterruptedException e) {
+			// 	// TODO Auto-generated catch block
+			// 	e.printStackTrace();
+			// }
             status = "YOU WON!";
-            MapLoader.mapCount = 0;
+            MapLoader.mapCount = 1;
             MapLoader.finalPoint = 0;
         }
         
         
+
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
+                
             map = mapLoader.reloadMap();
+            music.playSound();
+
+
+                //Thread.sleep(3000);
+                
             if(numLives == 0 || numLives == 6 ) {
                 try {
-    				Thread.sleep(5000);
+    				Thread.sleep(1000);
     			} catch (InterruptedException e) {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
@@ -258,13 +298,11 @@ public class GameEngine extends GameCore
             }
             return;
         }
-        
+        updateCreature(player, elapsedTime);
+        player.update(elapsedTime);
         // get keyboard/mouse input
         checkInput(elapsedTime);
         
-        // update player
-        updateCreature(player, elapsedTime);
-        player.update(elapsedTime);
         
         // update other sprites
         Iterator i = map.getSprites();
@@ -276,10 +314,11 @@ public class GameEngine extends GameCore
                     i.remove();
                 } else {
                     updateCreature(creature, elapsedTime);
+                    // normal update
+                    sprite.update(elapsedTime);
                 }
             }
-            // normal update
-            sprite.update(elapsedTime);
+            
         }
     }
     
@@ -367,11 +406,14 @@ public class GameEngine extends GameCore
             Creature badguy = (Creature)collisionSprite;
             if (canKill) {
                 // kill the badguy and make player bounce
+                killSound.playSound();
                 badguy.setState(Creature.STATE_DYING);
                 player.setY(badguy.getY() - player.getHeight());
                 player.jump(true);
             } else {
                 // player dies!
+                music.stopSound();
+                deathSound.playSound(0.05);
                 player.setState(Creature.STATE_DYING);
                 numLives--;
                 if(numLives==0) {
@@ -391,6 +433,7 @@ public class GameEngine extends GameCore
      */
     public void acquirePowerUp(PowerUp powerUp) {
         // remove it from the map
+        coinSound.playSound(0.05);
         map.removeSprite(powerUp);
         
         if (powerUp instanceof PowerUp.Star) {
@@ -412,6 +455,7 @@ public class GameEngine extends GameCore
             
         }
     }
+
     
       
 }

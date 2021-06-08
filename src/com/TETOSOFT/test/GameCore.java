@@ -88,7 +88,7 @@ public abstract class GameCore {
 
         Window window = screen.getFullScreenWindow();
         window.setFont(new Font("Dialog", Font.PLAIN, FONT_SIZE));
-        window.setBackground(Color.BLACK);
+        // window.setBackground(Color.BLACK);
         window.setForeground(Color.WHITE);
 
         isRunning = true;
